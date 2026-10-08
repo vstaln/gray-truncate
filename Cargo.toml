@@ -1,0 +1,17 @@
+[package]
+name = "gray-truncate"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.91"
+license = "MIT"
+description = "Caps oversized tool results (head/tail middle-out truncation)"
+
+[[bin]]
+name = "gray-truncate"
+path = "src/main.rs"
+
+[dependencies]
+serde_json = "1"
+
+[profile.release]
+strip = true
