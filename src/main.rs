@@ -22,6 +22,7 @@ fn manifest() -> Value {
         "tools": [],
         "description": "cap oversized tool results head and tail",
         "commands": ["/truncate"],
+        "command_descriptions": {"/truncate": "cap oversized tool results"},
         "hooks": ["tool/after"],
     })
 }
