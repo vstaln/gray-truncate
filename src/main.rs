@@ -20,7 +20,7 @@ fn manifest() -> Value {
         "version": env!("CARGO_PKG_VERSION"),
         "protocol": "2.0",
         "tools": [],
-        "description": "cap",
+        "description": "cap oversized tool results head and tail",
         "commands": ["/truncate"],
         "hooks": ["tool/after"],
     })
