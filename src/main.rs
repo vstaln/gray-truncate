@@ -114,7 +114,11 @@ fn run_command(argv: &[&str]) -> String {
                 std::fs::create_dir_all(state_dir()).and_then(|_| std::fs::write(&flag, b""))
             } else {
                 std::fs::remove_file(&flag).or_else(|e| {
-                    if e.kind() == std::io::ErrorKind::NotFound { Ok(()) } else { Err(e) }
+                    if e.kind() == std::io::ErrorKind::NotFound {
+                        Ok(())
+                    } else {
+                        Err(e)
+                    }
                 })
             };
             match res {
@@ -173,7 +177,9 @@ fn main() -> std::io::Result<()> {
     let mut stdout = std::io::stdout();
     for line in stdin.lock().lines() {
         let line = line?;
-        let Ok(req) = serde_json::from_str::<Value>(&line) else { continue };
+        let Ok(req) = serde_json::from_str::<Value>(&line) else {
+            continue;
+        };
         let (reply, exit) = handle(&req);
         if let Some(reply) = reply {
             writeln!(stdout, "{reply}")?;
@@ -191,7 +197,9 @@ mod tests {
     use super::*;
 
     fn call(method: &str, params: Value) -> Value {
-        handle(&json!({ "id": 1, "method": method, "params": params })).0.unwrap()
+        handle(&json!({ "id": 1, "method": method, "params": params }))
+            .0
+            .unwrap()
     }
 
     #[test]
@@ -203,7 +211,10 @@ mod tests {
 
     #[test]
     fn short_results_pass_through() {
-        let r = call("tool/after", json!({ "name": "bash", "content": "small", "is_error": false }));
+        let r = call(
+            "tool/after",
+            json!({ "name": "bash", "content": "small", "is_error": false }),
+        );
         assert_eq!(r["result"], json!({}));
     }
 
@@ -213,7 +224,10 @@ mod tests {
         let mid: String = std::iter::repeat_n('m', 20000).collect();
         let tail: String = std::iter::repeat_n('t', 5000).collect();
         let content = format!("{head}{mid}{tail}");
-        let r = call("tool/after", json!({ "name": "read", "content": content, "is_error": false }));
+        let r = call(
+            "tool/after",
+            json!({ "name": "read", "content": content, "is_error": false }),
+        );
         let out = r["result"]["content"].as_str().unwrap();
         assert!(out.contains("truncated"));
         assert!(out.starts_with(&head[..100]));
